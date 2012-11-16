@@ -45,14 +45,17 @@ hbs.registerPartial('darkskyrpl', darksky);
 app.get('/ajax/location/lat/:lat/long/:long', function(request, response){
 	var lat = request.params.lat;
 	var long = request.params.long;
+	var allData = new Array;
+	gm.reverseGeocode(lat+','+long, function(err, data){
+		allData.location = data;
+			client.forecast(lat, long, function(err, data) { 
+//			data = JSON.parse(data);
+			allData.darkSky = data;
+			console.log(allData);
+			response.send(allData);
+			console.log("OK");
+		});
 
-//	gm.reverseGeocode(lat+','+long, function(err, data){
-//		response.send(data);
-//		response.render("darksky", {"forecast":data});
-//	});
-	client.forecast(lat, long, function(err, data) { 
-		console.log(JSON.parse(data));
-		response.send(JSON.parse(data));
 	});
 	
 });
